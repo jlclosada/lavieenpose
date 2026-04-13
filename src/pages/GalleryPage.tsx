@@ -13,7 +13,7 @@ const stagger = {
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30, scale: 0.97 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] } },
+  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.5, ease: [0.22, 1, 0.36, 1] as const } },
 }
 
 export default function GalleryPage() {
@@ -129,7 +129,11 @@ export default function GalleryPage() {
             onClick={() => { setSelectedImage(img); setActiveHotspot(null) }}
           >
             <div className="lookbook-card-img">
-              <img src={img.url} alt={img.caption ?? ''} loading="lazy" />
+              {img.media_type === 'video' ? (
+                <video src={img.url} muted loop playsInline preload="metadata" />
+              ) : (
+                <img src={img.url} alt={img.caption ?? ''} loading="lazy" />
+              )}
               <div className="lookbook-card-overlay">
                 <Eye size={20} />
                 <span>Ver look</span>
@@ -192,7 +196,11 @@ export default function GalleryPage() {
 
               {/* Image with hotspots */}
               <div className="lb-image-wrap">
-                <img src={selectedImage.url} alt={selectedImage.caption ?? ''} />
+                {selectedImage.media_type === 'video' ? (
+                  <video src={selectedImage.url} controls muted autoPlay loop />
+                ) : (
+                  <img src={selectedImage.url} alt={selectedImage.caption ?? ''} />
+                )}
 
                 {showHotspots && selectedImage.hotspots?.map((hs, i) => (
                   <motion.button

@@ -298,7 +298,13 @@ export const api = {
       .select('*, hotspots:lookbook_hotspots(*)')
       .eq('id', imageId)
       .single()
-    if (error) throw error
+    if (error) {
+      // Fallback sin hotspots si la tabla no existe aún
+      const { data: fallback, error: err2 } = await supabase
+        .from('gallery_images').select('*').eq('id', imageId).single()
+      if (err2) throw err2
+      return { ...fallback, hotspots: [] } as GalleryImage & { hotspots: LookbookHotspot[] }
+    }
     return data as GalleryImage & { hotspots: LookbookHotspot[] }
   },
 
@@ -309,7 +315,14 @@ export const api = {
       .order('sort_order', { ascending: true })
     if (collection) query = query.eq('collection', collection)
     const { data, error } = await query
-    if (error) throw error
+    if (error) {
+      // Fallback sin hotspots si la tabla no existe aún
+      let q2 = supabase.from('gallery_images').select('*').order('sort_order', { ascending: true })
+      if (collection) q2 = q2.eq('collection', collection)
+      const { data: fallback, error: err2 } = await q2
+      if (err2) throw err2
+      return (fallback ?? []).map((img: GalleryImage) => ({ ...img, hotspots: [] })) as (GalleryImage & { hotspots: LookbookHotspot[] })[]
+    }
     return (data ?? []) as (GalleryImage & { hotspots: LookbookHotspot[] })[]
   },
 
