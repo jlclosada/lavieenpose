@@ -165,7 +165,13 @@ export default function GalleryPage() {
             <p>Cargando lookbook...</p>
           </div>
         )}
-        {images.data?.length === 0 && (
+        {images.isError && (
+          <div className="error-banner">
+            <p>Error al cargar galería: {images.error?.message ?? 'Conexión con Supabase fallida'}</p>
+            <button className="btn-secondary" onClick={() => images.refetch()}>Reintentar</button>
+          </div>
+        )}
+        {images.data?.length === 0 && !images.isError && (
           <p className="empty-text">No hay imágenes en esta colección.</p>
         )}
       </motion.div>

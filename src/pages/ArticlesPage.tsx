@@ -93,7 +93,13 @@ export default function ArticlesPage() {
         {articles.isLoading && (
           <div className="lookbook-loading"><div className="spinner" /><p>Cargando artículos...</p></div>
         )}
-        {articles.data?.length === 0 && <p className="empty-text">No hay artículos en esta categoría.</p>}
+        {articles.isError && (
+          <div className="error-banner">
+            <p>Error al cargar artículos: {articles.error?.message ?? 'Conexión con Supabase fallida'}</p>
+            <button className="btn-secondary" onClick={() => articles.refetch()}>Reintentar</button>
+          </div>
+        )}
+        {articles.data?.length === 0 && !articles.isError && <p className="empty-text">No hay artículos en esta categoría.</p>}
       </motion.div>
     </section>
   )

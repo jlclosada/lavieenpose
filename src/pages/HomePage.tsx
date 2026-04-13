@@ -138,8 +138,14 @@ export default function HomePage() {
           {featured.isLoading && (
             <div className="lookbook-loading"><div className="spinner" /><p>Cargando...</p></div>
           )}
+          {featured.isError && (
+            <div className="error-banner">
+              <p>Error al cargar artículos: {featured.error?.message ?? 'Conexión con Supabase fallida'}</p>
+              <button className="btn-secondary" onClick={() => featured.refetch()}>Reintentar</button>
+            </div>
+          )}
           <AnimatePresence>
-            {featured.data?.length === 0 && (
+            {featured.data?.length === 0 && !featured.isError && (
               <motion.p className="empty-text" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
                 Aún no hay artículos publicados.
               </motion.p>

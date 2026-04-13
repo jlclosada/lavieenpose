@@ -652,6 +652,23 @@ main {
   padding: 2rem 0;
 }
 
+.error-banner {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 12px;
+  grid-column: 1 / -1;
+}
+.error-banner p {
+  color: #dc2626;
+  margin-bottom: 1rem;
+  font-size: 0.95rem;
+}
+.error-banner button {
+  font-size: 0.85rem;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .site-header nav {
